@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # In[3]:
-
+# importing pretrained model vgg16 using keras library
 
 from keras.applications import VGG16
 
@@ -37,7 +37,7 @@ for (i,layer) in enumerate(model.layers):
 
 # In[4]:
 
-
+# creating one function for add in previous model architecture
 def addTopModel(bottom_model, num_classes, D=256):
     """creates the top or head of the model that will be 
     placed ontop of the bottom layers"""
@@ -51,7 +51,7 @@ def addTopModel(bottom_model, num_classes, D=256):
 
 # In[5]:
 
-
+# using our new layer we add to freezed layer of Vgg architecture
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D
@@ -70,7 +70,7 @@ print(modelnew.summary())
 
 # In[6]:
 
-
+# here we import our data to fit on the model
 from keras.preprocessing.image import ImageDataGenerator
 
 train_data_dir = 'C://Users//Lakshya//Desktop//MLops//lakshya//lakshya_train//'
@@ -105,7 +105,7 @@ validation_generator = validation_datagen.flow_from_directory(
 
 
 # In[ ]:
-
+# now we trained our model
 
 from keras.optimizers import RMSprop
 from keras.callbacks import ModelCheckpoint, EarlyStopping
@@ -130,9 +130,9 @@ modelnew.compile(loss = 'categorical_crossentropy',
               optimizer = RMSprop(lr = 0.001),
               metrics = ['accuracy'])
 
-nb_train_samples = 1190
-nb_validation_samples = 170
-epochs = 3
+nb_train_samples = 120
+nb_validation_samples = 10
+epochs = 2   # use less epochs to save my time otherwise use atleast 12 epochs
 batch_size = 16
 
 history = modelnew.fit_generator(
@@ -142,13 +142,13 @@ history = modelnew.fit_generator(
     callbacks = callbacks,
     validation_data = validation_generator,
     validation_steps = nb_validation_samples // batch_size)
-
+# save it for further use
 modelnew.save("lakshya_vgg.h5")
 
 
 # In[ ]:
 
-
+# import our model 
 from keras.models import load_model
 
 classifier = load_model('lakshya_vgg.h5')
@@ -156,7 +156,7 @@ classifier = load_model('lakshya_vgg.h5')
 
 # In[ ]:
 
-
+# using open-cv and other libraries we can can pass our data and from validation we test the model
 import os
 import cv2
 import numpy as np
@@ -203,3 +203,4 @@ for i in range(0,10):
 
 cv2.destroyAllWindows()
 
+# finally if accuracy less freeze the model add more NN layers and test it again 
